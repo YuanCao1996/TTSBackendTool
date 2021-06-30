@@ -41,7 +41,7 @@ def updateToTrainTxt(originalTrainTxt, outDataPath, LEResult):
             if line.strip() == "":
                 continue
             line_split = line.strip().split('|')
-            sid = line_split[0].split('.')[0].strip()[6:]
+            sid = line_split[0].split('.')[0].strip()[4:]
             #         print(sid)
             if sid not in mapping.keys():
                 fs_out.write(line.strip()+"\n")
@@ -82,7 +82,7 @@ def updateToTrainTxt(originalTrainTxt, outDataPath, LEResult):
         print("Success!")
         print(utils.getUpdProportion(mapping))
 
-def updateToXml(xmlPath,outDataPath, LEResult):
+def updateToXml(xmlPath,outDataPath, LEResult,bookId):
     xmlList=listdir(xmlPath)
     target="那"
     count=0
@@ -98,7 +98,7 @@ def updateToXml(xmlPath,outDataPath, LEResult):
         collection = DOMTree.documentElement
         sicltLst=collection.getElementsByTagName("si")
         for siclt in sicltLst:
-            sid=siclt.getAttribute("id")
+            sid=bookId+siclt.getAttribute("id")
             if sid not in mapping.keys():
                 continue
             newPhoneList=mapping[sid]
