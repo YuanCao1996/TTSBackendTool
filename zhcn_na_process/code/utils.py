@@ -51,3 +51,48 @@ def getUpdProportion(mapping):
         if 'n eh_h i_l' in i:
             updateCount += 1
     return str(updateCount/len(mapping.keys())*100)[:5]+"%"
+
+def getNaWaveProportion(naWavePath):
+    lst=[
+        r"D:\data\prcess_audiobook\FeatureExtract\CharacterVoice\xiaotang_narrative_erhua\Data\Wave16kNormalize",
+        r"D:\data\prcess_audiobook\FeatureExtract\CharacterVoice\xiaotang_youngfemale_erhua\Data\Wave16kNormalize",
+        r"D:\data\prcess_audiobook\FeatureExtract\CharacterVoice\xiaotang_youngmale_erhua\Data\Wave16kNormalize",
+        r"D:\data\prcess_audiobook\FeatureExtract\Xiaotang_new_recording\ErHua\Data\Wave16kNormalize",
+        r"D:\data\prcess_audiobook\FeatureExtract\Xiaotang_new_recording\Mixlingual\Data\Wave16kNormalize",
+        r"D:\data\prcess_audiobook\FeatureExtract\Xiaotang_new_recording\ModalParticle\Data\Wave16kNormalize",
+        r"D:\data\prcess_audiobook\FeatureExtract\hmtq_erhua\Data\Wave16kNormalize",
+        r"D:\data\prcess_audiobook\FeatureExtract\jczy_erhua\Data\Wave16kNormalize"
+    ]
+    allLength=0
+    for p in lst:
+        folderList=listdir(p)
+        if ".wav" in folderList[0]:
+            wavePath=p
+            allLength+=getWaveLength(wavePath)
+            print(wavePath)
+        else:
+            for i in folderList:
+                wavePath=os.path.join(p,i)
+                allLength+=getWaveLength(wavePath)
+                print(wavePath)
+    return str(getWaveLength(naWavePath) / allLength * 100)[:5]+"%"
+
+def addBookId():
+    #add to train.txt
+    path=r"D:\data\prcess_audiobook\FeatureExtract\Xiaotang_new_recording\ModalParticle\wav_mel\mel_0.05_0.1"
+    f=open(os.path.join(path,"train.txt"),"r",encoding="utf-8")
+    for line in f.readlines():
+        #     print(line[0:4]+"20"+line[4:])
+        with open(os.path.join(path,"train_reid.txt"),"a+",encoding="utf-8") as nf:
+            nf.write(line[0:4]+"25"+line[4:])
+    #         nf.write(line.strip()+"|"+"1"+"|"+str(int(line[4:6]))+"\n")
+    f.close()
+    nf.close()
+    #add to waves
+    path=r"D:\data\prcess_audiobook\FeatureExtract\Xiaotang_new_recording\ModalParticle\wav_mel\mel_0.05_0.1\mels"
+    fileList=listdir(path)
+    for file in fileList:
+        oldFile=os.path.join(path,file)
+        newName=file[0:4]+"25"+file[4:]
+        #     newName=file[0:4]+file[6:]
+        os.rename(oldFile,os.path.join(path,newName))
